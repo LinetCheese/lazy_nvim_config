@@ -1,6 +1,7 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
+		"saghen/blink.cmp",
 		{
 			"folke/lazydev.nvim",
 			ft = "lua", -- only load on lua files
@@ -15,13 +16,15 @@ return {
 	},
 
 	config = function()
+		local capabilities = require('blink.cmp').get_lsp_capabilities()
+
 		local lspconfig = require("lspconfig")
-		lspconfig.lua_ls.setup {}
-		lspconfig.gopls.setup {}
-		lspconfig.dartls.setup {}
-		lspconfig.rls.setup {}
-		lspconfig.cland.setup {}
-		lspconfig.ts_ls.setup {}
+		lspconfig.lua_ls.setup { capabilities = capabilities }
+		lspconfig.gopls.setup { capabilities = capabilities }
+		lspconfig.dartls.setup { capabilities = capabilities }
+		lspconfig.rls.setup { capabilities = capabilities }
+		lspconfig.cland.setup { capabilities = capabilities }
+		lspconfig.ts_ls.setup { capabilities = capabilities }
 
 	end,
 }
