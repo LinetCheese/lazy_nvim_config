@@ -22,8 +22,8 @@ return {
 		lspconfig.lua_ls.setup { capabilities = capabilities }
 		lspconfig.gopls.setup { capabilities = capabilities }
 		lspconfig.dartls.setup { capabilities = capabilities }
-		lspconfig.rls.setup { capabilities = capabilities }
-		lspconfig.cland.setup { capabilities = capabilities }
+		lspconfig.rust_analyzer.setup { capabilities = capabilities }
+		lspconfig.clangd.setup { capabilities = capabilities }
 		lspconfig.ts_ls.setup { capabilities = capabilities }
 
 
