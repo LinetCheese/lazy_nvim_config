@@ -7,6 +7,18 @@ vim.opt.shiftwidth = 4
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+-- Autocommands
+
+-- Set up 2 spaces for tab in Python, Dart, JS, TS
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "python", "dart", "javascript", "typescript" },
+	callback = function()
+		vim.opt.tabstop = 2
+		vim.opt.softtabstop = 2
+		vim.opt.shiftwidth = 2
+	end
+})
+
 -- custom shortcuts
 
 shell_command = "zsh -ic ''"

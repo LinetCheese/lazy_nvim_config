@@ -19,13 +19,36 @@ return {
 		local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 		local lspconfig = require("lspconfig")
+		local util = require("lspconfig.util")
+
+		-- If the base project has 
+		local function get_dart_path()
+			local root_dir = util.root_pattern(".fvm")(vim.fn.expand("%:p:h")) or vim.fn.getcwd()
+			local fvm_dart = root_dir .. "/.fvm/flutter_sdk/bin/dart"
+
+			if vim.fn.executable(fvm_dart) == 1 then
+				return fvm_dart
+			else
+				return "dart"
+			end
+		end
+
 		lspconfig.lua_ls.setup { capabilities = capabilities }
 		lspconfig.gopls.setup { capabilities = capabilities }
-		lspconfig.dartls.setup { capabilities = capabilities }
+		lspconfig.dartls.setup {
+			capabilities = capabilities,
+			cmd = { get_dart_path(), "language-server", "--protocol=lsp" },
+			root_dir = util.root_pattern("pubspec.yaml", ".fvm"),
+			settings = {
+				dart = {
+					completeFunctionCalls = true,
+					showTodos = true,
+				}
+			}
+		}
 		lspconfig.rust_analyzer.setup { capabilities = capabilities }
 		lspconfig.clangd.setup { capabilities = capabilities }
 		lspconfig.ts_ls.setup { capabilities = capabilities }
-
 
 		vim.keymap.set("n", "<space>f", function()
 			vim.lsp.buf.format()
