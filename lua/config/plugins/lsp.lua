@@ -51,7 +51,7 @@ return {
 		lspconfig.ts_ls.setup { capabilities = capabilities }
 
 		vim.keymap.set("n", "<space>f", function()
-			vim.lsp.buf.format()
+			vim.lsp.buf.format { asnyc = true }
 		end)
 
 		-- On save
