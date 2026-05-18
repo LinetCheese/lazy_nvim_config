@@ -27,7 +27,7 @@ vim.keymap.set("n", "<C-4>", function () harpoon:list():select(4) end)
 
 -- Set up 2 spaces for tab in Python, Dart, JS, TS
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "python", "dart", "javascript", "typescript" },
+	pattern = { "python", "dart", "javascript", "typescript", "typescriptreact" },
 	callback = function()
 		vim.opt.tabstop = 2
 		vim.opt.softtabstop = 2

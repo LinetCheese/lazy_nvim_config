@@ -18,10 +18,26 @@ return {
 	config = function()
 		local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-		local lspconfig = require("lspconfig")
+		-- Custom/external formatters
 		local util = require("lspconfig.util")
+		require("conform").setup({
+			formatters_by_ft = {
+				html = { "prettier" },
+				javascript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				vue = { "prettier" },
+				svelte = { "prettier" },
+			},
+		})
 
-		-- If the base project has 
+		local conform = require("conform")
+
+		local ft_for_tailwindcss = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" }
+
+		-- For Flutter - if base project has a .fvm subdir with a specific Flutter
+		-- installation - use that instead. Otherwise just use systemwide one
 		local function get_dart_path()
 			local root_dir = util.root_pattern(".fvm")(vim.fn.expand("%:p:h")) or vim.fn.getcwd()
 			local fvm_dart = root_dir .. "/.fvm/flutter_sdk/bin/dart"
@@ -33,25 +49,53 @@ return {
 			end
 		end
 
-		lspconfig.lua_ls.setup { capabilities = capabilities }
-		lspconfig.gopls.setup { capabilities = capabilities }
-		lspconfig.dartls.setup {
-			capabilities = capabilities,
+		vim.lsp.config("*", { capabilities = capabilities })
+
+		vim.lsp.config("dartls", {
 			cmd = { get_dart_path(), "language-server", "--protocol=lsp" },
 			root_dir = util.root_pattern("pubspec.yaml", ".fvm"),
 			settings = {
 				dart = {
-					completeFunctionCalls = true,
+					completeFunctionCalls = false,
 					showTodos = true,
 				}
 			}
+		})
+
+		vim.lsp.config("ts_ls", {
+			on_init = function (client)
+				client.server_capabilities.documentFormattingProvider = false
+			end
+		})
+
+		vim.lsp.config("tailwindcss", {
+			filetypes = ft_for_tailwindcss,
+		})
+
+		local servers = {
+			"lua_ls",
+			"gopls",
+			"dartls",
+			"rust_analyzer",
+			"clangd",
+			"tailwindcss",
 		}
-		lspconfig.rust_analyzer.setup { capabilities = capabilities }
-		lspconfig.clangd.setup { capabilities = capabilities }
-		lspconfig.ts_ls.setup { capabilities = capabilities }
+
+		for _, server in ipairs(servers) do
+			vim.lsp.enable(server)
+		end
 
 		vim.keymap.set("n", "<space>f", function()
-			vim.lsp.buf.format { asnyc = true }
+			local custom_format_fts = { ft_for_tailwindcss }
+			local use_conform = vim.iter(custom_format_fts)
+				:flatten()
+				:any(function (v) return v == vim.bo.filetype end)
+
+			if use_conform then
+				conform.format({ async = true })
+			else
+				vim.lsp.buf.format { async = true }
+			end
 		end)
 
 		-- On save
