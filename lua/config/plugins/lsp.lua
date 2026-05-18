@@ -79,6 +79,7 @@ return {
 			"rust_analyzer",
 			"clangd",
 			"tailwindcss",
+			"ols",
 		}
 
 		for _, server in ipairs(servers) do
