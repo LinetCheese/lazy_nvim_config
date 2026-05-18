@@ -31,6 +31,7 @@ plugins, but otherwise you should be mostly good to go.
 
 One thing to also consider - since this plugin uses Mason's Tailwind LSP - you'll need
 to install it manually. You can do so by running `:Mason` inside neovim, searching for
-`tailwindcss` and hitting Enter on it.
+`tailwindcss` and hitting "I" on it. It should pick up the lsp through your local
+`npm` installation, which you probably have, if you want Tailwind anyway.
 
 Afterwards, run `:checkhealth` to see if there are any immediate issues.
