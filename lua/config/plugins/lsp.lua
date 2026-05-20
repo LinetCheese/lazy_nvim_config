@@ -36,31 +36,35 @@ return {
 
 		local ft_for_tailwindcss = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" }
 
-		-- For Flutter - if base project has a .fvm subdir with a specific Flutter
-		-- installation - use that instead. Otherwise just use systemwide one
-		local function get_dart_path()
-			local root_dir = util.root_pattern(".fvm")(vim.fn.expand("%:p:h")) or vim.fn.getcwd()
-			local fvm_dart = root_dir .. "/.fvm/flutter_sdk/bin/dart"
-
-			if vim.fn.executable(fvm_dart) == 1 then
-				return fvm_dart
-			else
-				return "dart"
-			end
-		end
-
 		vim.lsp.config("*", { capabilities = capabilities })
 
-		vim.lsp.config("dartls", {
-			cmd = { get_dart_path(), "language-server", "--protocol=lsp" },
-			root_dir = util.root_pattern("pubspec.yaml", ".fvm"),
+		-- Dart/Flutter instead uses flutter-tools.nvim configuration.
+		require("flutter-tools").setup {
+			ui = {
+				notification_model = "nvim-notify",
+			},
+			decorations = {
+				statusline = {
+					device = true,
+					app_version = true,
+				},
+			},
+			capabilities = capabilities,
+			root_dir = util.root_pattern("pubspec.yaml"),
 			settings = {
-				dart = {
-					completeFunctionCalls = false,
-					showTodos = true,
-				}
-			}
+				showTodos = true,
+				completeFunctionCalls = false,
+				suggestFromUnimportedLibraries = true,
+			},
+		}
+
+		vim.api.nvim_create_autocmd("LspAttach", {
+			pattern = "dart",
+			callback = function(ev)
+				vim.lsp.document_color.enable(true, { bufnr = ev.buf })
+			end
 		})
+
 
 		vim.lsp.config("ts_ls", {
 			on_init = function (client)
@@ -98,6 +102,7 @@ return {
 				vim.lsp.buf.format { async = true }
 			end
 		end)
+
 
 		-- On save
 		-- vim.api.nvim_create_autocmd('LspAttach', {
