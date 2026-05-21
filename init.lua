@@ -9,6 +9,8 @@ vim.wo.relativenumber = true
 
 vim.g.netrw_liststyle = 3
 vim.g.netrw_banner = 0
+-- Keep the cursor position
+vim.g.netrw_fastbrowse = 2
 
 -- Setting up harpoon
 local harpoon = require("harpoon")
@@ -23,6 +25,14 @@ vim.keymap.set("n", "<C-2>", function () harpoon:list():select(2) end)
 vim.keymap.set("n", "<C-3>", function () harpoon:list():select(3) end)
 vim.keymap.set("n", "<C-4>", function () harpoon:list():select(4) end)
 
+-- Setting up telescope
+local telescope = require("telescope.builtin")
+vim.keymap.set("n", "<leader>pf", telescope.find_files, {})
+vim.keymap.set("n", "<leader>ps", function () telescope.grep_string({ search = vim.fn.input("Grep > ") }) end, {})
+
+-- Misc shortcuts
+vim.keymap.set("n", "<leader>pv", vim.cmd.Rexplore)
+
 -- Autocommands
 
 -- Set up 2 spaces for tab in Python, Dart, JS, TS
@@ -35,14 +45,3 @@ vim.api.nvim_create_autocmd("FileType", {
 	end
 })
 
--- custom shortcuts
-
-local shell_command = "zsh -ic ''"
-
-vim.keymap.set("n", "<leader>t", function()
-		-- Insert the command into command line and put the cursor
-		-- inside the quotes to start typing actual shell command right
-		-- away.
-		vim.api.nvim_feedkeys(":!"..shell_command, "n", false)
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Left>", true, false, true), "n", true)
-end, { desc = "Run interactive shell command" })

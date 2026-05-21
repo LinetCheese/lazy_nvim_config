@@ -14,14 +14,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Need to be set after loading Lazy
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 require("lazy").setup({
 	spec = {
 		{ import = "config.plugins" },
 	},
 })
+
 
 vim.cmd("colorscheme tokyonight")
