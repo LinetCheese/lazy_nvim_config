@@ -34,7 +34,8 @@ return {
 
 		local conform = require("conform")
 
-		local ft_for_tailwindcss = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" }
+		local ft_for_tailwindcss = { "html", "javascript", "typescript", "javascriptreact", "typescriptreact", "vue",
+			"svelte" }
 
 		vim.lsp.config("*", { capabilities = capabilities })
 
@@ -67,7 +68,7 @@ return {
 
 
 		vim.lsp.config("ts_ls", {
-			on_init = function (client)
+			on_init = function(client)
 				client.server_capabilities.documentFormattingProvider = false
 			end
 		})
@@ -94,7 +95,7 @@ return {
 			local custom_format_fts = { ft_for_tailwindcss }
 			local use_conform = vim.iter(custom_format_fts)
 				:flatten()
-				:any(function (v) return v == vim.bo.filetype end)
+				:any(function(v) return v == vim.bo.filetype end)
 
 			if use_conform then
 				conform.format({ async = true })

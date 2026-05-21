@@ -17,18 +17,18 @@ local harpoon = require("harpoon")
 
 harpoon:setup()
 
-vim.keymap.set("n", "<leader>a", function () harpoon:list():add() end)
-vim.keymap.set("n", "<C-e>", function () harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
-vim.keymap.set("n", "<C-1>", function () harpoon:list():select(1) end)
-vim.keymap.set("n", "<C-2>", function () harpoon:list():select(2) end)
-vim.keymap.set("n", "<C-3>", function () harpoon:list():select(3) end)
-vim.keymap.set("n", "<C-4>", function () harpoon:list():select(4) end)
+vim.keymap.set("n", "<C-1>", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<C-2>", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<C-3>", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<C-4>", function() harpoon:list():select(4) end)
 
 -- Setting up telescope
 local telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>pf", telescope.find_files, {})
-vim.keymap.set("n", "<leader>ps", function () telescope.grep_string({ search = vim.fn.input("Grep > ") }) end, {})
+vim.keymap.set("n", "<leader>ps", function() telescope.grep_string({ search = vim.fn.input("Grep > ") }) end, {})
 
 -- Misc shortcuts
 vim.keymap.set("n", "<leader>pv", vim.cmd.Rexplore)
@@ -44,4 +44,3 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt.shiftwidth = 2
 	end
 })
-
