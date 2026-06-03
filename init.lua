@@ -44,3 +44,15 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt.shiftwidth = 2
 	end
 })
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	callback = function()
+		if vim.bo.filetype == "netrw" then
+			vim.opt_local.colorcolumn = ""
+		elseif vim.bo.filetype == "dart" then
+			vim.opt_local.colorcolumn = "120"
+		else
+			vim.opt_local.colorcolumn = "80"
+		end
+	end
+})
