@@ -10,5 +10,7 @@ return {
 		}
 		local minidiff = require 'mini.diff'
 		minidiff.setup()
+		vim.keymap.set('n', '<leader>gd', function() MiniDiff.toggle_overlay(vim.api.nvim_get_current_buf()) end,
+			{ desc = 'Preview git diff hunk' })
 	end
 }

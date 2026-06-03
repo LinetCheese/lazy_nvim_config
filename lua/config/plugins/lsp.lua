@@ -84,6 +84,7 @@ return {
 			"rust_analyzer",
 			"clangd",
 			"tailwindcss",
+			"ts_ls",
 			"ols",
 		}
 
