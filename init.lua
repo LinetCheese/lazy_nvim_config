@@ -7,10 +7,14 @@ vim.opt.shiftwidth = 4
 vim.wo.number = true
 vim.wo.relativenumber = true
 
-vim.g.netrw_liststyle = 3
-vim.g.netrw_banner = 0
--- Keep the cursor position
-vim.g.netrw_fastbrowse = 2
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- Silence the remainders of FileExplorer autocmds that fail
+-- to run due to it not existing anymore
+if vim.fn.exists("#FileExplorer") == 1 then
+	vim.cmd("silent! autocmd! FileExplorer *")
+end
 
 -- Setting up harpoon
 local harpoon = require("harpoon")
@@ -31,7 +35,15 @@ vim.keymap.set("n", "<leader>pf", telescope.find_files, {})
 vim.keymap.set("n", "<leader>ps", function() telescope.grep_string({ search = vim.fn.input("Grep > ") }) end, {})
 
 -- Misc shortcuts
-vim.keymap.set("n", "<leader>pv", vim.cmd.Rexplore)
+vim.keymap.set("n", "<leader>pv",
+	function()
+		require("neo-tree.command").execute({
+			toggle = true,
+			position = "left",
+		})
+	end
+)
+vim.keymap.set("n", "<leader>sqf", function() vim.diagnostic.setqflist() end, {})
 
 -- Autocommands
 
@@ -53,6 +65,27 @@ vim.api.nvim_create_autocmd("BufEnter", {
 			vim.opt_local.colorcolumn = "120"
 		else
 			vim.opt_local.colorcolumn = "80"
+		end
+	end
+})
+
+-- Since netrw is disabled here - show clean buffer with Neotree
+-- lua_ls somehow doesn't like that event type, despite it working
+-- properly.
+---@diagnostic disable-next-line: param-type-mismatch
+vim.api.nvim_create_autocmd("UIEnter", {
+	callback = function()
+		local first_arg = vim.fn.argv(0)
+
+		if first_arg and type(first_arg) == "string" and vim.fn.isdirectory(first_arg) == 1 and vim.fn.argc() == 1 then
+			local target_dir = vim.fn.fnamemodify(first_arg, ":p")
+			vim.api.nvim_set_current_dir(target_dir)
+			vim.cmd("bwipeout!")
+			require("neo-tree.command").execute({
+				action = "show",
+				position = "left",
+				dir = target_dir,
+			})
 		end
 	end
 })

@@ -92,7 +92,7 @@ return {
 			vim.lsp.enable(server)
 		end
 
-		vim.keymap.set("n", "<space>f", function()
+		vim.keymap.set("n", "<leader>f", function()
 			local custom_format_fts = { ft_for_tailwindcss }
 			local use_conform = vim.iter(custom_format_fts)
 				:flatten()
@@ -103,6 +103,10 @@ return {
 			else
 				vim.lsp.buf.format { async = true }
 			end
+		end)
+
+		vim.keymap.set("n", "<leader>ca", function()
+			vim.lsp.buf.code_action()
 		end)
 
 
